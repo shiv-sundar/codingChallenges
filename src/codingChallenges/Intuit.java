@@ -12,7 +12,7 @@ public class Intuit {
 	
 	HashMap<String, Node> nodes = new HashMap<>();
 	
-	public void constructList(String[] left, String[] right) {
+	public void constructTree(String[] left, String[] right) {
 		for (int x = 0; x < left.length; x++) {
 			if (!nodes.containsKey(left[x])) {
 				Node node = new Node();
@@ -52,29 +52,37 @@ public class Intuit {
 		}
 	}
 	
-	public String findLeaves(Node node) {
-		String x = "";
+	public HashMap<String, Node> findLeaves(Node node) {
+		HashMap<String, Node> toRet = new HashMap<String, Node>();
 		if (node.children.size() == 0) {
-			return node.key;
+			toRet.put(node.key, node);
+			return toRet;
 		}
 		
 		for (Node node2 : node.children) {
-			x += findLeaves(node2) + ", ";
+			toRet.putAll(findLeaves(node2));
 		}
 		
-		return x;
+		return toRet;
 	}
 	
 	public void printLeaves() {
 		for (Node node : nodes.values()) {
+			HashMap<String, Node> toRet = new HashMap<String, Node>();
 			if (node.parent.size() == 0) {
+				String leaves = "";
 				System.out.print(node.key + ": ");
 				for (Node node2 : node.children) {
-					System.out.print(findLeaves(node2));
+					toRet.putAll(findLeaves(node2));;
 				}
+				
+				for (Node node2 : toRet.values()) {
+					leaves += node2.key + ", ";
+				}
+				
+				leaves = leaves.substring(0, leaves.length() - 2);
+				System.out.println(leaves);
 			}
-			
-			System.out.println();
 		}
 	}
 	
@@ -102,7 +110,7 @@ public class Intuit {
 		right[8] = "H";
 		right[9] = "I";
 		Intuit test = new Intuit();
-		test.constructList(left, right);
+		test.constructTree(left, right);
 		test.printLeaves();
 	}
 }
