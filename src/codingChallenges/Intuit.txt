@@ -1,0 +1,59 @@
+Challenge Description:
+The input given is a 2D array with 2 columns and an indeterminate amount of rows.
+Each row contains a parent-child relationship with the left column being the parent and the right side being a child.
+The output required is the "root" (see Challenge Notes and Observations section for why root is in quotes) of each tree, then all leaves of that tree.
+
+Time Given: 2 hours
+Time Taken (Estimated): 1:45
+
+Challenge Notes and Observations:
+"Root" is placed in quotes because each tree can have more than one root, whereas trees are generally defined as having one root node.
+All nodes have a unique key.
+The input array is not given in any certain order of tree traversal, only parent-child relationships.
+There can be multiple trees.
+A node can have more than one parent.
+A node can have more than one child.
+Multiple nodes may share the same child.
+
+Solution: 
+Since a node can have an indeterminate amount of parents and children, I used an ArrayList for its variable size to contain references to each node.
+Since all nodes' keys are unique, I felt that a hashmap would be useful.
+	1.) To construct the tree, iterate through the input array to generate nodes and create parent-child relationships.
+		If the parent node does not already exist in the hashmap, create a new node.
+		If the child node does not already exist in the hashmap, create a new node.
+		Otherwise, get the reference to the child node.
+		Add the parent reference to the ArrayList of the child node's parents, and vice-versa.
+		Add both nodes to the hashmap.
+		Otherwise, get the reference to the parent node.
+		If the child node does not already exist in the hashmap, create a new node.
+		Add the parent reference to the ArrayList of the child node's parents, and vice-versa.
+
+	2.) To find the leaves, create a recursive function.
+		If the node has no children, then it is a leaf.
+		Add the node to the hashmap of leaves.
+		Return the populated hashmap.
+		If the node does have children, then recursively search the children for leaves.
+		Return the populated hashmap.
+
+	3.) To print the leaves, look through all nodes in the hashmap.
+		If the node does not have a parent, then it is a "root" node.
+		Print out the "root" node's key as required by the output format.
+		Look through the node's children to find leaves using the recursive function.
+		Build the string of leaf keys by iterating through the hashmap of leaf node references.
+		Remove the extra comma to fit the required output format.
+		Print the string and move to a new line for the next tree.
+
+Solution Analysis:
+This solution runs in about O((# of relationships) + (# of nodes) + ((# of trees) * (# of parents) * (# of leaves))). 
+This can be boiled down to roughly O(n) as the number of nodes can not exceed the number of relationships.
+"n" here is defined as the number of rows in the input array.
+
+Extra Notes:
+The visualization of the current test case looks like this:
+     A      L
+    / \     |
+   Q   D    T
+  / \ /    / \
+ E   F    M   N
+    /\
+   K  C
